@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Callable, List, Dict, Union, Optional
+from typing import Any, List, Dict
 
 
 class DataProcessor(ABC):
@@ -47,7 +47,8 @@ class NumericProcessor(DataProcessor):
         data: List[int] = [int(num) for num in result.split()]
         summary: int = sum(data)
         avg = summary / len(data)
-        return f"Processed {len(data)} numeric values, sum={summary}, avg={avg:.1f}"
+        return f"Processed {len(data)} numeric values"\
+            f", sum={summary}, avg={avg:.1f}"
 
 
 class TextProcessor(DataProcessor):
@@ -66,7 +67,8 @@ class TextProcessor(DataProcessor):
         return type(data) is str
 
     def format_output(self, result: str) -> str:
-        return f"Processed text: {len(result)} characters, {len(result.split())} words"
+        return f"Processed text: {len(result)} characters"\
+            f", {len(result.split())} words"
 
 
 class LogProcessor(DataProcessor):
