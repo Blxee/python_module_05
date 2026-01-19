@@ -1,14 +1,17 @@
-from typing import Union, Any, Dict, List
-from abc import ABC, abstractmethod
+import csv
 import json
 import sys
-import csv
+from abc import ABC, abstractmethod
+from typing import Any, Dict, List, Union
 
 ProcessingStage = Union["InputStage", "TransformStage", "OutputStage"]
 
 
 class ProcessingPipeline(ABC):
+    """Super class for all pipelines."""
+
     def __init__(self) -> None:
+        """Initialize a new pipeline."""
         self.stages: List[ProcessingStage] = []
 
     def add_stage(self, stage: ProcessingStage):
@@ -17,12 +20,16 @@ class ProcessingPipeline(ABC):
             self.stages.append(stage)
 
     @abstractmethod
-    def process(data: Any) -> Any:
+    def process(self, data: Any) -> Any:
+        """Abstract method to process data through pipeline stages."""
         pass
 
 
 class InputStage:
+    """Input stage processor class."""
+
     def process(self, data: Any) -> Dict:
+        """Process data."""
         try:
             data["valid"] = True
         except Exception:
@@ -35,7 +42,10 @@ class InputStage:
 
 
 class TransformStage:
+    """Transform stage processor class."""
+
     def process(self, data: Any) -> Dict:
+        """Process data."""
         try:
             data_type = data["type"]
             raw = data["raw"]
@@ -61,7 +71,10 @@ class TransformStage:
 
 
 class OutputStage:
+    """Output stage processor class."""
+
     def process(self, data: Any) -> str:
+        """Process data."""
         try:
             return data["raw"]
         except Exception:
@@ -73,11 +86,15 @@ class OutputStage:
 
 
 class JSONAdapter(ProcessingPipeline):
+    """JSON data pipeline."""
+
     def __init__(self, pipeline_id: str) -> None:
+        """Initialize a new pipeline."""
         super().__init__()
         self.pipeline_id = pipeline_id
 
     def process(self, data: Any) -> Union[str, Any]:
+        """Process data through pipeline stages."""
         data = {
             "raw": data,
             "type": "json",
@@ -90,11 +107,15 @@ class JSONAdapter(ProcessingPipeline):
 
 
 class CSVAdapter(ProcessingPipeline):
+    """JSON data pipeline."""
+
     def __init__(self, pipeline_id: str) -> None:
+        """Initialize a new pipeline."""
         super().__init__()
         self.pipeline_id = pipeline_id
 
     def process(self, data: Any) -> Union[str, Any]:
+        """Process data through pipeline stages."""
         data = {
             "raw": data,
             "type": "csv",
@@ -107,11 +128,15 @@ class CSVAdapter(ProcessingPipeline):
 
 
 class StreamAdapter(ProcessingPipeline):
+    """JSON data pipeline."""
+
     def __init__(self, pipeline_id: str) -> None:
+        """Initialize a new pipeline."""
         super().__init__()
         self.pipeline_id = pipeline_id
 
     def process(self, data: Any) -> Union[str, Any]:
+        """Process data through pipeline stages."""
         data = {
             "raw": data,
             "type": "stream",
@@ -124,14 +149,19 @@ class StreamAdapter(ProcessingPipeline):
 
 
 class NexusManager:
+    """Orchestrates multiple pipeline chains."""
+
     def __init__(self) -> None:
+        """Initialize a new NexusManager."""
         self.pipelines: List[ProcessingPipeline] = []
 
     def add_pipeline(self, pipeline: ProcessingPipeline):
+        """Add a new pipeline to the processing chain."""
         if isinstance(pipeline, ProcessingPipeline):
             self.pipelines.append(pipeline)
 
     def process_data(self, data: Any):
+        """Process data through the pipeline chain."""
         try:
             for pipeline in self.pipelines:
                 data = pipeline.process(data)
@@ -143,6 +173,7 @@ class NexusManager:
 
 
 def add_processing_stages(pipeline: ProcessingPipeline):
+    """Add 3 stage stages to the given pipeline (input, transform, output)."""
     try:
         pipeline.add_stage(InputStage())
         pipeline.add_stage(TransformStage())
@@ -152,6 +183,7 @@ def add_processing_stages(pipeline: ProcessingPipeline):
 
 
 def test_json_pipeline():
+    """Test a json pipeline with dummy data using three stages."""
     json_adapter = JSONAdapter("JSON_001")
     add_processing_stages(json_adapter)
 
@@ -165,6 +197,7 @@ def test_json_pipeline():
 
 
 def test_csv_pipeline():
+    """Test a csv pipeline with dummy data using three stages."""
     csv_adapter = CSVAdapter("CSV_001")
     add_processing_stages(csv_adapter)
 
@@ -178,6 +211,7 @@ def test_csv_pipeline():
 
 
 def test_stream_pipeline():
+    """Test a steam pipeline with dummy data using three stages."""
     stream_adapter = StreamAdapter("STREAM_001")
     add_processing_stages(stream_adapter)
 
@@ -191,6 +225,7 @@ def test_stream_pipeline():
 
 
 def test_pipeline_chaining():
+    """Test polymorphic handling of pipelines."""
     print("\n=== Pipeline Chaining Demo ===")
 
     manager = NexusManager()
@@ -213,6 +248,7 @@ def test_pipeline_chaining():
 
 
 def test_pipeline_failure():
+    """Test error recovery."""
     print("\n=== Error Recovery Test ===")
     print("Simulating pipeline failure...")
     json_adapter: JSONAdapter = JSONAdapter("JSON_001")
@@ -223,6 +259,7 @@ def test_pipeline_failure():
 
 
 def main():
+    """Etnry function."""
     print("""\
 === CODE NEXUS - ENTERPRISE PIPELINE SYSTEM ===
 

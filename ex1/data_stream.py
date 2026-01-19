@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Any, List, Dict, Union, Optional, Set, Tuple
+import sys
 
 
 class DataStream(ABC):
@@ -271,7 +272,7 @@ class StreamProcessor:
         if not isinstance(stream, DataStream) or not isinstance(
             filter_criteria, str
         ):
-            print("[Error]: this is not a valid stream")
+            print("[Error]: this is not a valid stream", file=sys.stderr)
             return
         self.data_streams.append((stream, filter_criteria))
 
@@ -393,10 +394,13 @@ def main() -> None:
     """Program entry function."""
     print("=== CODE NEXUS - POLYMORPHIC STREAM SYSTEM ===")
 
-    test_sensor_stream()
-    test_transaction_stream()
-    test_event_stream()
-    test_poly_stream()
+    try:
+        test_sensor_stream()
+        test_transaction_stream()
+        test_event_stream()
+        test_poly_stream()
+    except Exception as error:
+        print(error, file=sys.stderr)
 
     print("\nAll streams processed successfully. Nexus throughput optimal.")
 
