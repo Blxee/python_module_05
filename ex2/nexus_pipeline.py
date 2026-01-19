@@ -14,7 +14,7 @@ class ProcessingPipeline(ABC):
         """Initialize a new pipeline."""
         self.stages: List[ProcessingStage] = []
 
-    def add_stage(self, stage: ProcessingStage):
+    def add_stage(self, stage: ProcessingStage) -> None:
         """Add this object to stage if it has a 'process' (ducktyping)."""
         if callable(getattr(stage, "process", None)):
             self.stages.append(stage)
@@ -155,12 +155,12 @@ class NexusManager:
         """Initialize a new NexusManager."""
         self.pipelines: List[ProcessingPipeline] = []
 
-    def add_pipeline(self, pipeline: ProcessingPipeline):
+    def add_pipeline(self, pipeline: ProcessingPipeline) -> None:
         """Add a new pipeline to the processing chain."""
         if isinstance(pipeline, ProcessingPipeline):
             self.pipelines.append(pipeline)
 
-    def process_data(self, data: Any):
+    def process_data(self, data: Any) -> None:
         """Process data through the pipeline chain."""
         try:
             for pipeline in self.pipelines:
@@ -172,7 +172,7 @@ class NexusManager:
             )
 
 
-def add_processing_stages(pipeline: ProcessingPipeline):
+def add_processing_stages(pipeline: ProcessingPipeline) -> None:
     """Add 3 stage stages to the given pipeline (input, transform, output)."""
     try:
         pipeline.add_stage(InputStage())
@@ -182,7 +182,7 @@ def add_processing_stages(pipeline: ProcessingPipeline):
         print("Error detected while adding stages: not a valid pipeline")
 
 
-def test_json_pipeline():
+def test_json_pipeline() -> None:
     """Test a json pipeline with dummy data using three stages."""
     json_adapter = JSONAdapter("JSON_001")
     add_processing_stages(json_adapter)
@@ -196,7 +196,7 @@ def test_json_pipeline():
     print("Output: Processed temperature reading: 23.5°C (Normal range)")
 
 
-def test_csv_pipeline():
+def test_csv_pipeline() -> None:
     """Test a csv pipeline with dummy data using three stages."""
     csv_adapter = CSVAdapter("CSV_001")
     add_processing_stages(csv_adapter)
@@ -210,7 +210,7 @@ def test_csv_pipeline():
     print("Output: User activity logged: 1 actions processed")
 
 
-def test_stream_pipeline():
+def test_stream_pipeline() -> None:
     """Test a steam pipeline with dummy data using three stages."""
     stream_adapter = StreamAdapter("STREAM_001")
     add_processing_stages(stream_adapter)
@@ -224,7 +224,7 @@ def test_stream_pipeline():
     print("Output: Stream summary: 5 readings, avg: 22.1°C")
 
 
-def test_pipeline_chaining():
+def test_pipeline_chaining() -> None:
     """Test polymorphic handling of pipelines."""
     print("\n=== Pipeline Chaining Demo ===")
 
@@ -247,7 +247,7 @@ def test_pipeline_chaining():
     print("Performance: 95% efficiency, 0.2s total processing time")
 
 
-def test_pipeline_failure():
+def test_pipeline_failure() -> None:
     """Test error recovery."""
     print("\n=== Error Recovery Test ===")
     print("Simulating pipeline failure...")
@@ -258,7 +258,7 @@ def test_pipeline_failure():
     print("Recovery successful: Pipeline restored, processing resumed")
 
 
-def main():
+def main() -> None:
     """Etnry function."""
     print("""\
 === CODE NEXUS - ENTERPRISE PIPELINE SYSTEM ===
