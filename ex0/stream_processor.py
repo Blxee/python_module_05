@@ -18,7 +18,7 @@ class DataProcessor(ABC):
 
     def format_output(self, result: str) -> str:
         """Format the processed data."""
-        return "Processed data: " + result
+        return "Processed"
 
 
 class NumericProcessor(DataProcessor):
@@ -53,7 +53,7 @@ class NumericProcessor(DataProcessor):
         summary: int = sum(data)
         avg = summary / len(data)
         return (
-            f"Processed {len(data)} numeric values"
+            super().format_output(result) + f" {len(data)} numeric values"
             f", sum={summary}, avg={avg:.1f}"
         )
 
@@ -79,7 +79,7 @@ class TextProcessor(DataProcessor):
             print("[Error]: result should be a string", file=sys.stderr)
             return ""
         return (
-            f"Processed text: {len(result)} characters"
+            super().format_output(result) + f" text: {len(result)} characters"
             f", {len(result.split())} words"
         )
 
