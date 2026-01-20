@@ -2,9 +2,15 @@ import csv
 import json
 import sys
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Protocol, Union
 
-ProcessingStage = Union["InputStage", "TransformStage", "OutputStage"]
+
+class ProcessingStage(Protocol):
+    """Protocol for duck-typing stages."""
+
+    def process(self, data: Any) -> Any:
+        """Process data."""
+        pass
 
 
 class ProcessingPipeline(ABC):
