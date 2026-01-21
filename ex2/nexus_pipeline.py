@@ -199,7 +199,8 @@ def test_json_pipeline() -> None:
     print("\nProcessing JSON data through pipeline...")
     print("Input:", str(json_input).replace("'", '"'))
     print("Transform: Enriched with metadata and validation")
-    print("Output: Processed temperature reading: 23.5°C (Normal range)")
+    print("Output: Processed temperature reading:"
+          f" {json_input.get('value', 0)}°C (Normal range)")
 
 
 def test_csv_pipeline() -> None:
@@ -213,7 +214,8 @@ def test_csv_pipeline() -> None:
     print("\nProcessing CSV data through same pipeline...")
     print("Input:", f'"{csv_input}"')
     print("Transform: Parsed and structured data")
-    print("Output: User activity logged: 1 actions processed")
+    print("Output: User activity logged: "
+          f"{csv_input.count('action')} actions processed")
 
 
 def test_stream_pipeline() -> None:
@@ -227,7 +229,8 @@ def test_stream_pipeline() -> None:
     print("\nProcessing Stream data through same pipeline...")
     print("Input: Real-time sensor stream")
     print("Transform: Aggregated and filtered")
-    print("Output: Stream summary: 5 readings, avg: 22.1°C")
+    print(f"Output: Stream summary: {len(stream_input)} readings,"
+          f" avg: {sum(stream_input) / len(stream_input)}°C")
 
 
 def test_pipeline_chaining() -> None:
@@ -279,11 +282,14 @@ Stage 3: Output formatting and delivery
 
 === Multi-Format Data Processing ===""")
 
-    test_json_pipeline()
-    test_csv_pipeline()
-    test_stream_pipeline()
-    test_pipeline_chaining()
-    test_pipeline_failure()
+    try:
+        test_json_pipeline()
+        test_csv_pipeline()
+        test_stream_pipeline()
+        test_pipeline_chaining()
+        test_pipeline_failure()
+    except Exception as error:
+        print("[Error]:", error)
 
     print("\nNexus Integration complete. All systems operational.")
 
